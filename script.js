@@ -1,6 +1,9 @@
 
 // Uses code to generate a random number between 0-2. Depending on what number is chosen
 // determines what choice the computer gets
+let playerRoundCount = 0;
+let computerRoundCount = 0;
+let playerSelection;
 
 function computerPlay() {
     let randomNum = Math.floor(Math.random() * 3);
@@ -29,8 +32,11 @@ function playRound(playerSelection, computerSelection) {
     (playerSelection == 'scissors' && computerSelection == 'paper') || 
     (playerSelection == 'paper' && computerSelection == 'rock')) {
         
-        playerRoundCount += 1;
-        return console.log(`You win! ${playerSelection} beats ${computerSelection}`);
+        
+        resultsDiv.innerText = `Computer chose ${computerSelection}.\n You win the round! ${playerSelection} beats ${computerSelection}!`;
+        playerRoundCount += 1
+        scoreDiv.innerText = `Player Score: ${playerRoundCount} Computer Score: ${computerRoundCount}`
+        gameWinner();
 
     }
 
@@ -39,35 +45,114 @@ function playRound(playerSelection, computerSelection) {
     (playerSelection == 'rock' && computerSelection == 'paper')) {
 
         computerRoundCount += 1;
-        return console.log(`You lose! ${playerSelection} is beaten by ${computerSelection}`);
+        resultsDiv.innerText = `Computer chose ${computerSelection}.\n You lose the round! ${playerSelection} is beaten by ${computerSelection}!`;
+        scoreDiv.innerText = `Player Score: ${playerRoundCount} Computer Score: ${computerRoundCount}`
+        gameWinner();
 
     }
 
     else if (playerSelection == computerSelection) {
         
-        return console.log("Round is a tie!")
-
+        resultsDiv.innerText = `Computer chose ${computerSelection}.\n Round is a tie!`
+        scoreDiv.innerText = `Player Score: ${playerRoundCount} Computer Score: ${computerRoundCount}`
+        
     }
 }
 
-// Main game loop of the program. Loops 5 times and shows round counts for player and computer
+//
 
-function gameLoop() {
-    for (let i = 0; i < 5; i++) {
-        playerSelection = prompt('Rock, Paper or Scissors?');
-        playerSelection = playerSelection.toLowerCase();
-        computerSelection = computerPlay();
-        console.log(`Computer chose ${computerSelection}!`)
-        playRound(playerSelection, computerSelection);
-        console.log(`Player win Count: ${playerRoundCount} Computer win count: ${computerRoundCount}`);
+function gameWinner() {
+    if (playerRoundCount == 5) {
+        resultsDiv.innerText = 'You have won the game! Congratulations!'
+        document.body.append(resetButton);
+        return;
     }
 
+    else if (computerRoundCount == 5) {
+        resultsDiv.innerText = 'You just got beaten by the computer! Ouch..'
+        document.body.append(resetButton);
+        return;
+    }
+
+    else {
+        return;
+    }
+
+
+}
+// creates button that can reset the game that appears when score hits 5
+
+let resetButton = document.createElement('button');
+resetButton.setAttribute('id', 'resetButton');
+resetButton.innerText = 'Reset';
+resetButton.addEventListener('click', resetGame);
+
+//function to reset the game
+
+function resetGame() {
     playerRoundCount = 0;
     computerRoundCount = 0;
+    scoreDiv.innerText = `Player Score: ${playerRoundCount} Computer Score: ${computerRoundCount}`
+    resetButton.remove();
+    resultsDiv.innerText = 'Choose your move! First to 5 wins!'
 }
 
 
-let playerRoundCount = 0;
-let computerRoundCount = 0;
-let playerSelection;
+// creates buttons for the players choice and relays the choice to the program
+
+let rockButton = document.createElement('button');
+rockButton.setAttribute('id', 'rock')
+document.getElementById('buttonHolder').append(rockButton);
+rockButton.innerText = 'Rock';
+rockButton.addEventListener('click', rockRound);
+
+function rockRound() {
+    playerSelection = 'rock';
+    computerSelection = computerPlay();
+    playRound(playerSelection, computerSelection)
+}
+
+
+let paperButton = document.createElement('button');
+paperButton.setAttribute('id', 'paper')
+document.getElementById('buttonHolder').append(paperButton);
+paperButton.innerText = 'Paper';
+paperButton.addEventListener('click', paperRound);
+
+function paperRound() {
+    playerSelection = 'paper';
+    computerSelection = computerPlay();
+    playRound(playerSelection, computerSelection)
+}
+
+
+let scissorsButton = document.createElement('button');
+scissorsButton.setAttribute('id', 'scissors')
+document.getElementById('buttonHolder').append(scissorsButton);
+scissorsButton.innerText = 'Scissors';
+scissorsButton.addEventListener('click', scissorsRound);
+
+function scissorsRound() {
+    playerSelection = 'scissors';
+    computerSelection = computerPlay();
+    playRound(playerSelection, computerSelection)
+}
+
+
+// Creates Divs that display the results of the round and the current score
+
+let resultsDiv = document.createElement('div');
+resultsDiv.setAttribute('id', 'resultsDiv');
+document.getElementById('textHolder').append(resultsDiv);
+resultsDiv.innerText = 'Choose your move! First to 5 wins!'
+
+let scoreDiv = document.createElement('div');
+scoreDiv.setAttribute('id', 'scoreDiv');
+document.getElementById('textHolder').append(scoreDiv);
+
+
+
+
+
+
 
